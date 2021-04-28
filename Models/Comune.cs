@@ -1,3 +1,4 @@
+using System;
 namespace Bartolini.Liam._4H.SaveRecord.Models
 {
     public class Comune
@@ -8,10 +9,10 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
     
         public Comune() { }
 
-        public Comune(string riga)
+        public Comune(string riga, int id)
         {
             string[] colonne = riga.Split(',');
-            
+            ID = id;
         }
     }
 }
