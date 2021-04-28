@@ -10,6 +10,7 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
 
         public Comune(string riga)
         {
+            string[] colonne = riga.Split(',');
             
         }
     }
