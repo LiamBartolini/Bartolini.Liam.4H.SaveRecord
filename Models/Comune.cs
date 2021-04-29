@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -56,13 +55,14 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
         {
             FileStream fout = new FileStream(fileName, FileMode.Create);
             BinaryWriter writer = new BinaryWriter(fout);
+            
             foreach (Comune comune in this)
             {
-                fout.Seek((comune.ID - 1) * 32, SeekOrigin.Begin);
                 writer.Write(comune.ID);
                 writer.Write(comune.CodiceCatastale);
                 writer.Write(comune.NomeComune);
             }
+
             writer.Flush();
             writer.Close();
         }
@@ -82,16 +82,19 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
 
             Comune c = new Comune();
 
-            // Leggo l'ID
-            c.ID = reader.ReadInt32();
+            while (reader.BaseStream.Position != reader.BaseStream.Length)
+            {   
+                // Leggo l'ID
+                c.ID = reader.ReadInt32();
 
-            // Leggo il codice catastale
-            c.CodiceCatastale = reader.ReadString();
+                // Leggo il codice catastale
+                c.CodiceCatastale = reader.ReadString();
 
-            // Leggo il nome del comune
-            c.NomeComune = reader.ReadString();
+                // Leggo il nome del comune
+                c.NomeComune = reader.ReadString();
 
-            Add( c );
+                Add( c );
+            }
         }
     }
 }
