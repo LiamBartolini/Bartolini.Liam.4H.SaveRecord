@@ -53,18 +53,19 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
 
         public void Save(string fileName)
         {
-            FileStream fout = new FileStream(fileName, FileMode.Create);
-            BinaryWriter writer = new BinaryWriter(fout);
-            
-            foreach (Comune comune in this)
+            using (FileStream fout = new FileStream(fileName, FileMode.Create))
             {
-                writer.Write(comune.ID);
-                writer.Write(comune.CodiceCatastale);
-                writer.Write(comune.NomeComune);
-            }
+                BinaryWriter writer = new BinaryWriter(fout);
 
-            writer.Flush();
-            writer.Close();
+                foreach (Comune comune in this)
+                {
+                    writer.Write(comune.ID);
+                    writer.Write(comune.CodiceCatastale);
+                    writer.Write(comune.NomeComune);
+                }
+                writer.Flush();
+                writer.Dispose();
+            }
         }
 
         public void Load()
@@ -77,23 +78,21 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
         {
             Clear(); // cancella tutti i record
 
-            FileStream fin = new FileStream(fileName, FileMode.Open);
-            BinaryReader reader = new BinaryReader(fin);
-
-            Comune c = new Comune();
-
-            while (reader.BaseStream.Position != reader.BaseStream.Length)
-            {   
-                // Leggo l'ID
-                c.ID = reader.ReadInt32();
-
-                // Leggo il codice catastale
-                c.CodiceCatastale = reader.ReadString();
-
-                // Leggo il nome del comune
-                c.NomeComune = reader.ReadString();
-
-                Add( c );
+            using (FileStream fin = new FileStream(fileName, FileMode.Open))
+            {
+                BinaryReader reader = new BinaryReader(fin);
+                Comune c = new Comune();
+                
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {   
+                    // Leggo l'ID
+                    c.ID = reader.ReadInt32();
+                    // Leggo il codice catastale
+                    c.CodiceCatastale = reader.ReadString();
+                    // Leggo il nome del comune
+                    c.NomeComune = reader.ReadString();
+                    Add( c );
+                }
             }
         }
     }
