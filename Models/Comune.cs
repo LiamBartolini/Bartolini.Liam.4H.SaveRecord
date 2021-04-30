@@ -1,3 +1,4 @@
+using System.Text;
 using System.IO;
 using System.Collections.Generic;
 
@@ -6,8 +7,49 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
     public class Comune
     {
         public int ID { get; set; }
-        public string NomeComune { get; set; }
-        public string CodiceCatastale { get; set; }
+        private string _nomeComune;
+        public string NomeComune
+        { 
+            get => _nomeComune;
+
+            set
+            {
+                /*
+                Lunghezza Record = 32
+                ID = 4 Byte
+                CodiceCatastale = 4 + 1
+                NomeComune = 22 + 1
+                */
+                if (value.Length == 22)
+                    _nomeComune = value;
+
+                if (value.Length < 22)
+                    value = value.PadRight(22);
+                else if (value.Length > 22)
+                    value = value.Substring(0, 22);
+
+                _nomeComune = value;
+            }
+        }
+        private string _codiceCatastale;
+
+        public string CodiceCatastale
+        { 
+            get => _codiceCatastale;
+
+            set
+            {
+                if (value.Length == 4)
+                    _codiceCatastale = value;
+
+                if (value.Length < 4)
+                    value = value.PadRight(4);
+                else if (value.Length > 4)
+                    value = value.Substring(0, 4);
+
+                _codiceCatastale = value;
+            }
+        }
     
         public Comune() { }
 
@@ -17,6 +59,15 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
             ID = id;
             CodiceCatastale = colonne[0];
             NomeComune = colonne[1];
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"ID:\t\t\t{ID}");
+            sb.AppendLine($"Codice catastale:\t{CodiceCatastale}");
+            sb.AppendLine($"Nome comune:\t\t{NomeComune}");
+            return sb.ToString();
         }
     }
 
@@ -93,6 +144,44 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
                     c.NomeComune = reader.ReadString();
                     Add( c );
                 }
+            }
+        }
+
+        public Comune RicercaComune(int index)
+        {
+            string fn = NomeFile.Split('.')[0] + ".bin";
+            return RicercaComune(index, fn);
+        }
+
+        // Equivalente del override dell'indexer
+        public Comune RicercaComune(int index, string fileName)
+        {
+            FileStream fin = new FileStream(fileName, FileMode.Open);
+            BinaryReader reader = new BinaryReader(fin);
+
+            fin.Seek((index - 1) * 32, SeekOrigin.Begin);
+            Comune c = new Comune();
+            c.ID = reader.ReadInt32();
+            c.CodiceCatastale = reader.ReadString();
+            c.NomeComune = reader.ReadString();
+
+            return c;
+        }
+
+        // override Indexer per la ricerca di un comune direttamente
+        public Comune this[int index]
+        {
+            get 
+            {
+                FileStream fin = new FileStream("Comuni.bin", FileMode.Open);
+                BinaryReader reader = new BinaryReader(fin);
+
+                fin.Seek((index - 1) * 32, SeekOrigin.Begin);
+                Comune c = new Comune();
+                c.ID = reader.ReadInt32();
+                c.CodiceCatastale = reader.ReadString();
+                c.NomeComune = reader.ReadString();
+                return c;
             }
         }
     }

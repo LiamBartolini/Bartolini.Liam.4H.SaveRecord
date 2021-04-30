@@ -22,6 +22,9 @@ namespace Bartolini.Liam._4H.SaveRecord
             // Rileggere il file binario i una List<Comune>
             c.Load();
             Console.WriteLine($"Ho letto {c.Count} righe dal file binario...");
+
+            int index = 1000;
+            Console.WriteLine($"Comune di indice {index}:\n{c[index]}");
         }
     }
 }
