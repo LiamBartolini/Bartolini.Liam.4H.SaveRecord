@@ -167,22 +167,5 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
 
             return c;
         }
-
-        // override Indexer per la ricerca di un comune direttamente
-        public Comune this[int index]
-        {
-            get 
-            {
-                FileStream fin = new FileStream("Comuni.bin", FileMode.Open);
-                BinaryReader reader = new BinaryReader(fin);
-
-                fin.Seek((index - 1) * 32, SeekOrigin.Begin);
-                Comune c = new Comune();
-                c.ID = reader.ReadInt32();
-                c.CodiceCatastale = reader.ReadString();
-                c.NomeComune = reader.ReadString();
-                return c;
-            }
-        }
     }
 }
