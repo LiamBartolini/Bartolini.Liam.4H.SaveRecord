@@ -7,6 +7,7 @@ namespace Bartolini.Liam._4H.SaveRecord
     {
         static void Main(string[] args)
         {
+            const int NUMERO_VERIFICA = 5;
             Console.WriteLine("SaveRecord - 2021 - liambartolini@gmail.com");
             
             // 1)
@@ -14,17 +15,18 @@ namespace Bartolini.Liam._4H.SaveRecord
             Comuni c = new Comuni( "Comuni.csv" );
             Console.WriteLine($"Ho letto {c.Count} righe...");
 
+            Console.WriteLine($"Ecco la riga {NUMERO_VERIFICA}: {c[NUMERO_VERIFICA]}");
+
             // 2)
             // Scrivere la List<Comune> in un file binario
             c.Save();
-
+            
             // 3)
             // Rileggere il file binario i una List<Comune>
             c.Load();
             Console.WriteLine($"Ho letto {c.Count} righe dal file binario...");
-
-            int index = 1000;
-            Console.WriteLine($"Comune di indice {index}:\n{c[index]}");
+        
+            Console.WriteLine($"Ecco la riga {NUMERO_VERIFICA}: {c[NUMERO_VERIFICA]}");
         }
     }
 }

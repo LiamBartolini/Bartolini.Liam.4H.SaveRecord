@@ -61,14 +61,7 @@ namespace Bartolini.Liam._4H.SaveRecord.Models
             NomeComune = colonne[1];
         }
 
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"ID:\t\t\t{ID}");
-            sb.AppendLine($"Codice catastale:\t{CodiceCatastale}");
-            sb.AppendLine($"Nome comune:\t\t{NomeComune}");
-            return sb.ToString();
-        }
+        public override string ToString() =>  $"{ID}, {CodiceCatastale}, {NomeComune}";
     }
 
     public class Comuni : List<Comune> // Comuni è una List<Comuni>
